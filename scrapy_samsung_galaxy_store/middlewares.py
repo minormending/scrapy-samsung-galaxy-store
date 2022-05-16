@@ -16,8 +16,30 @@ from samsung_galaxy_store import SamsungGalaxyStore, Category, AppSummary, App
 
 
 class JsonResponse(Response):
-    def __init__(self, url, jobject, status=200, headers=None, body=b"", flags=None, request=None, certificate=None, ip_address=None, protocol=None):
-        super().__init__(url, status, headers, body, flags, request, certificate, ip_address, protocol)
+    def __init__(
+        self,
+        url,
+        jobject,
+        status=200,
+        headers=None,
+        body=b"",
+        flags=None,
+        request=None,
+        certificate=None,
+        ip_address=None,
+        protocol=None,
+    ):
+        super().__init__(
+            url,
+            status,
+            headers,
+            body,
+            flags,
+            request,
+            certificate,
+            ip_address,
+            protocol,
+        )
         self.jobject = jobject
         self.jtext = None
 
@@ -39,25 +61,22 @@ class SamsungGalaxyStoreDownloaderMiddleware:
         return s
 
     def process_request(self, request: Request, spider):
-        # Called for each request that goes through the downloader
-        # middleware.
-
-        # Must either:
-        # - return None: continue processing this request
-        # - or return a Response object
-        # - or return a Request object
-        # - or raise IgnoreRequest: process_exception() methods of
-        #   installed downloader middleware will be called
-
-        print("="*10, request.url)
+        print("=" * 10, request.url)
         if request.url == "api://categories":
             categories: List[Category] = self.api.get_categories()
             return JsonResponse(url=request.url, jobject=categories, request=request)
-        elif request.url == "api://category_apps":
+        elif request.url.startswith("api://category_apps/"):
             category: Category = request.meta.get("category")
             start: int = request.meta.get("start")
-            categories: List[AppSummary] = self.api.get_category_apps(category, start)
-            return JsonResponse(url=request.url, jobject=categories, request=request)
+            end: int = request.meta.get("end")
+            apps: List[AppSummary] = list(
+                self.api.get_category_apps(category, start, end)
+            )
+            return JsonResponse(url=request.url, jobject=apps, request=request)
+        elif request.url.startswith("api://app/"):
+            summary: AppSummary = request.meta.get("app")
+            app: App = self.api.get_app_details(summary.guid)
+            return JsonResponse(url=request.url, jobject=app, request=request)
         return None
 
     def process_response(self, request, response, spider):
