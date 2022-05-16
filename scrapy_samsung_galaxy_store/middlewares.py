@@ -3,20 +3,42 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+import json
+from typing import List
 from scrapy import signals
+from scrapy.http import Request, Response, TextResponse
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
 
 
-class ScrapySamsungGalaxyStoreDownloaderMiddleware:
+from samsung_galaxy_store import SamsungGalaxyStore, Category, AppSummary, App
+
+
+class JsonResponse(Response):
+    def __init__(self, url, jobject, status=200, headers=None, body=b"", flags=None, request=None, certificate=None, ip_address=None, protocol=None):
+        super().__init__(url, status, headers, body, flags, request, certificate, ip_address, protocol)
+        self.jobject = jobject
+        self.jtext = None
+
+    @property
+    def text(self):
+        if self.jtext is None:
+            self.jtext: str = json.dumps(self.jobject)
+        return self.jtext
+
+    def json(self):
+        return self.jobject
+
+
+class SamsungGalaxyStoreDownloaderMiddleware:
     @classmethod
     def from_crawler(cls, crawler):
         s = cls()
         crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
         return s
 
-    def process_request(self, request, spider):
+    def process_request(self, request: Request, spider):
         # Called for each request that goes through the downloader
         # middleware.
 
@@ -26,6 +48,16 @@ class ScrapySamsungGalaxyStoreDownloaderMiddleware:
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
+
+        print("="*10, request.url)
+        if request.url == "api://categories":
+            categories: List[Category] = self.api.get_categories()
+            return JsonResponse(url=request.url, jobject=categories, request=request)
+        elif request.url == "api://category_apps":
+            category: Category = request.meta.get("category")
+            start: int = request.meta.get("start")
+            categories: List[AppSummary] = self.api.get_category_apps(category, start)
+            return JsonResponse(url=request.url, jobject=categories, request=request)
         return None
 
     def process_response(self, request, response, spider):
@@ -49,3 +81,4 @@ class ScrapySamsungGalaxyStoreDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
+        self.api: SamsungGalaxyStore = SamsungGalaxyStore()
