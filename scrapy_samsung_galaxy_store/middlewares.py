@@ -3,54 +3,16 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-import json
 from typing import List
-from scrapy import signals
-from scrapy.http import Request, Response, TextResponse
+from scrapy import signals, Spider
+from scrapy.http import Request, Response
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
 
-
 from samsung_galaxy_store import SamsungGalaxyStore, Category, AppSummary, App
 
-
-class JsonResponse(Response):
-    def __init__(
-        self,
-        url,
-        jobject,
-        status=200,
-        headers=None,
-        body=b"",
-        flags=None,
-        request=None,
-        certificate=None,
-        ip_address=None,
-        protocol=None,
-    ):
-        super().__init__(
-            url,
-            status,
-            headers,
-            body,
-            flags,
-            request,
-            certificate,
-            ip_address,
-            protocol,
-        )
-        self.jobject = jobject
-        self.jtext = None
-
-    @property
-    def text(self):
-        if self.jtext is None:
-            self.jtext: str = json.dumps(self.jobject)
-        return self.jtext
-
-    def json(self):
-        return self.jobject
+from .json_response import JsonResponse
 
 
 class SamsungGalaxyStoreDownloaderMiddleware:
@@ -60,7 +22,7 @@ class SamsungGalaxyStoreDownloaderMiddleware:
         crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
         return s
 
-    def process_request(self, request: Request, spider):
+    def process_request(self, request: Request, spider: Spider):
         print("=" * 10, request.url)
         if request.url == "api://categories":
             categories: List[Category] = self.api.get_categories()
@@ -79,7 +41,7 @@ class SamsungGalaxyStoreDownloaderMiddleware:
             return JsonResponse(url=request.url, jobject=app, request=request)
         return None
 
-    def process_response(self, request, response, spider):
+    def process_response(self, request: Request, response: Response, spider: Spider):
         # Called with the response returned from the downloader.
 
         # Must either;
@@ -88,7 +50,7 @@ class SamsungGalaxyStoreDownloaderMiddleware:
         # - or raise IgnoreRequest
         return response
 
-    def process_exception(self, request, exception, spider):
+    def process_exception(self, request: Request, exception: Exception, spider: Spider):
         # Called when a download handler or a process_request()
         # (from other downloader middleware) raises an exception.
 
@@ -98,6 +60,6 @@ class SamsungGalaxyStoreDownloaderMiddleware:
         # - return a Request object: stops process_exception() chain
         pass
 
-    def spider_opened(self, spider):
+    def spider_opened(self, spider: Spider):
         spider.logger.info("Spider opened: %s" % spider.name)
         self.api: SamsungGalaxyStore = SamsungGalaxyStore()
