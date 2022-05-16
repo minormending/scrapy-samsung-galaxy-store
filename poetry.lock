@@ -474,6 +474,17 @@ requests = ">=1.0.0"
 six = "*"
 
 [[package]]
+name = "samsung-galaxy-store"
+version = "0.1.1"
+description = "Samsung Galaxy Store analysis tools"
+category = "main"
+optional = false
+python-versions = ">=3.10,<4.0"
+
+[package.dependencies]
+requests = ">=2.27.1,<3.0.0"
+
+[[package]]
 name = "scrapy"
 version = "2.6.1"
 description = "A high-level Web Crawling and Web Scraping framework"
@@ -651,7 +662,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "a1547a3fe0992c4ffe412c692b13860b7a5410058fa7824644fb5e9f12e7a1fd"
+content-hash = "3e356406bb7cd466269d53374ae738b31801cc4c037ecf4400e8a46acf18e0d0"
 
 [metadata.files]
 atomicwrites = [
@@ -1029,6 +1040,10 @@ requests = [
 requests-file = [
     {file = "requests-file-1.5.1.tar.gz", hash = "sha256:07d74208d3389d01c38ab89ef403af0cfec63957d53a0081d8eca738d0247d8e"},
     {file = "requests_file-1.5.1-py2.py3-none-any.whl", hash = "sha256:dfe5dae75c12481f68ba353183c53a65e6044c923e64c24b2209f6c7570ca953"},
+]
+samsung-galaxy-store = [
+    {file = "samsung-galaxy-store-0.1.1.tar.gz", hash = "sha256:7a1f7677f748d2723dce3f209483b2808da9689cae465f192288b3fee317b85e"},
+    {file = "samsung_galaxy_store-0.1.1-py3-none-any.whl", hash = "sha256:c633690fac7030b50889c2788f9767aef68763a9c735730d0bb7f76d93fbf3db"},
 ]
 scrapy = [
     {file = "Scrapy-2.6.1-py2.py3-none-any.whl", hash = "sha256:e977f57d4e828f25d2702e8c2212e8abcd7d6ce45be560f1830a39432a494c09"},
