@@ -10,7 +10,7 @@ from scrapy.http import Request, Response
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
 
-from samsung_galaxy_store import SamsungGalaxyStore, Category, AppSummary, App
+from samsung_galaxy_store import SamsungGalaxyStore, Category, AppSummary, App, Review
 
 from .json_response import JsonResponse
 
@@ -39,6 +39,12 @@ class SamsungGalaxyStoreDownloaderMiddleware:
             summary: AppSummary = request.meta.get("app")
             app: App = self.api.get_app_details(summary.guid)
             return JsonResponse(url=request.url, jobject=app, request=request)
+        elif request.url.startswith("api://app_reviews/"):
+            app: App = request.meta.get("app")
+            start: int = request.meta.get("start")
+            reviews: List[Review] = list(self.api.get_app_reviews_page(app.id, start))
+            return JsonResponse(url=request.url, jobject=reviews, request=request)
+        
         return None
 
     def process_response(self, request: Request, response: Response, spider: Spider):

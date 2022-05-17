@@ -46,12 +46,12 @@ class SpiderSpider(Spider):
             break
 
         if len(apps) == self.CATEGORY_APPS_PAGE_SIZE:
-            start: int = request.meta.get("start")
+            start: int = request.meta.get("start") + self.CATEGORY_APPS_PAGE_SIZE
             yield Request(
-                url=f"api://category_apps/{category.id}",
+                url=f"api://category_apps/{category.id}?start={start}",
                 meta={
                     "category": category,
-                    "start": start + self.CATEGORY_APPS_PAGE_SIZE,
+                    "start": start,
                     "end": self.CATEGORY_APPS_PAGE_SIZE,
                 },
                 callback=self.parse_category_apps,
@@ -77,12 +77,12 @@ class SpiderSpider(Spider):
         reviews: List[Review] = response.json()
 
         if len(reviews) == self.APP_REVIEWS_PAGE_SIZE:
-            start: int = request.meta.get("start")
+            start: int = request.meta.get("start") + self.APP_REVIEWS_PAGE_SIZE
             yield Request(
-                url=f"api://app_reviews/{app.id}",
+                url=f"api://app_reviews/{app.id}?start={start}",
                 meta={
                     "app": app,
-                    "start": start + self.APP_REVIEWS_PAGE_SIZE
+                    "start": start
                 },
                 callback=self.parse_app_reviews,
             )
