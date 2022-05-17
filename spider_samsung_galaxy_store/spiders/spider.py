@@ -3,7 +3,7 @@ from scrapy import Spider
 from scrapy.http import Request
 from samsung_galaxy_store import Category, AppSummary, App, Review
 
-from scrapy_samsung_galaxy_store.middlewares import JsonResponse
+from spider_samsung_galaxy_store.middlewares import JsonResponse
 
 
 class SpiderSpider(Spider):

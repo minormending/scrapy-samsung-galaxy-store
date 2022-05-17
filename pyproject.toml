@@ -1,9 +1,9 @@
 [tool.poetry]
-name = "scrapy-samsung-galaxy-store"
+name = "spider-samsung-galaxy-store"
 version = "0.1.0"
 description = "Samsung Galaxy Store Scrapy Spider"
 authors = ["Kevin Ramdath <krpent@gmail.com>"]
-repository = "https://github.com/minormending/scrapy-samsung-galaxy-store"
+repository = "https://github.com/minormending/spider-samsung-galaxy-store"
 readme = "README.md"
 license = "MIT"
 keywords = ["samsung", "galaxy", "appstore", "scrapy", "spider"]

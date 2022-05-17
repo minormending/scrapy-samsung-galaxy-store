@@ -1,4 +1,4 @@
-from scrapy_samsung_galaxy_store import __version__
+from spider_samsung_galaxy_store import __version__
 
 
 def test_version():

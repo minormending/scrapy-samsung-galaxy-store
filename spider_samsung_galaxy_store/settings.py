@@ -1,4 +1,4 @@
-# Scrapy settings for scrapy_samsung_galaxy_store project
+# Scrapy settings for spider_samsung_galaxy_store project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -7,14 +7,14 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = "scrapy_samsung_galaxy_store"
+BOT_NAME = "spider_samsung_galaxy_store"
 
-SPIDER_MODULES = ["scrapy_samsung_galaxy_store.spiders"]
-NEWSPIDER_MODULE = "scrapy_samsung_galaxy_store.spiders"
+SPIDER_MODULES = ["spider_samsung_galaxy_store.spiders"]
+NEWSPIDER_MODULE = "spider_samsung_galaxy_store.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-# USER_AGENT = 'scrapy_samsung_galaxy_store (+http://www.yourdomain.com)'
+# USER_AGENT = 'spider_samsung_galaxy_store (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -45,13 +45,13 @@ CONCURRENT_REQUESTS_PER_IP = 10
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 # SPIDER_MIDDLEWARES = {
-#    'scrapy_samsung_galaxy_store.middlewares.ScrapySamsungGalaxyStoreSpiderMiddleware': 543,
+#    'spider_samsung_galaxy_store.middlewares.ScrapySamsungGalaxyStoreSpiderMiddleware': 543,
 # }
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    "scrapy_samsung_galaxy_store.middlewares.SamsungGalaxyStoreDownloaderMiddleware": 543,
+    "spider_samsung_galaxy_store.middlewares.SamsungGalaxyStoreDownloaderMiddleware": 543,
 }
 
 # Enable or disable extensions
@@ -63,7 +63,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 # ITEM_PIPELINES = {
-#    'scrapy_samsung_galaxy_store.pipelines.ScrapySamsungGalaxyStorePipeline': 300,
+#    'spider_samsung_galaxy_store.pipelines.ScrapySamsungGalaxyStorePipeline': 300,
 # }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
