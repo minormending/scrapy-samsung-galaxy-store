@@ -492,7 +492,7 @@ six = "*"
 
 [[package]]
 name = "samsung-galaxy-store"
-version = "0.1.1"
+version = "0.1.4"
 description = "Samsung Galaxy Store analysis tools"
 category = "main"
 optional = false
@@ -679,7 +679,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "16e354dc7080594b4038b7ab94d8f9048c0d16872fb6c150e13622c3429b7f4b"
+content-hash = "62caef65e144f57a95a375e3ee239532560d75310c948bbe0773edf57a137b23"
 
 [metadata.files]
 atomicwrites = [
@@ -1144,8 +1144,8 @@ requests-file = [
     {file = "requests_file-1.5.1-py2.py3-none-any.whl", hash = "sha256:dfe5dae75c12481f68ba353183c53a65e6044c923e64c24b2209f6c7570ca953"},
 ]
 samsung-galaxy-store = [
-    {file = "samsung-galaxy-store-0.1.1.tar.gz", hash = "sha256:7a1f7677f748d2723dce3f209483b2808da9689cae465f192288b3fee317b85e"},
-    {file = "samsung_galaxy_store-0.1.1-py3-none-any.whl", hash = "sha256:c633690fac7030b50889c2788f9767aef68763a9c735730d0bb7f76d93fbf3db"},
+    {file = "samsung-galaxy-store-0.1.4.tar.gz", hash = "sha256:4bf9b4835e75e9aa715cc12ec21691fb4d706ddd06537361b68a0b640fc57431"},
+    {file = "samsung_galaxy_store-0.1.4-py3-none-any.whl", hash = "sha256:e11934d7cec916bff7653051d26679f2981bddd70bc97d815386af5278d90a46"},
 ]
 scrapy = [
     {file = "Scrapy-2.6.1-py2.py3-none-any.whl", hash = "sha256:e977f57d4e828f25d2702e8c2212e8abcd7d6ce45be560f1830a39432a494c09"},
