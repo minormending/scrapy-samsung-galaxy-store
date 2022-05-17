@@ -7,9 +7,6 @@ from typing import List
 from scrapy import signals, Spider
 from scrapy.http import Request, Response
 
-# useful for handling different item types with a single interface
-from itemadapter import is_item, ItemAdapter
-
 from samsung_galaxy_store import SamsungGalaxyStore, Category, AppSummary, App, Review
 
 from .json_response import JsonResponse

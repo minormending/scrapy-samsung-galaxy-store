@@ -62,9 +62,9 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-# ITEM_PIPELINES = {
-#    'spider_samsung_galaxy_store.pipelines.ScrapySamsungGalaxyStorePipeline': 300,
-# }
+ITEM_PIPELINES = {
+   'spider_samsung_galaxy_store.pipelines.MongoPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -86,3 +86,7 @@ HTTPCACHE_EXPIRATION_SECS = 60 * 60 * 24 * 3
 HTTPCACHE_DIR = "httpcache"
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 HTTPCACHE_STORAGE = "scrapy.extensions.httpcache.FilesystemCacheStorage"
+
+
+MONGO_URI = 'mongodb://localhost:27017'
+MONGO_DB = 'samsung-galaxy-store'

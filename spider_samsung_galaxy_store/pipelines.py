@@ -5,14 +5,15 @@
 
 
 # useful for handling different item types with a single interface
-from typing import Any
-from itemadapter import ItemAdapter
+from typing import Any, Dict
 from scrapy import Spider
 from pymongo.mongo_client import MongoClient
 from pymongo.database import Database
 
+from samsung_galaxy_store import Category, Developer, AppSummary, App, Review
 
-class MongoDBPipeline:
+
+class MongoPipeline:
     def __init__(self, uri: str, db: str) -> None:
         self.config_uri: str = uri
         self.config_db: str = db
@@ -20,7 +21,7 @@ class MongoDBPipeline:
         self.db: Database = None
 
     @classmethod
-    def from_crawler(cls, crawler) -> 'MongoDBPipeline':
+    def from_crawler(cls, crawler) -> 'MongoPipeline':
         return cls(
             uri=crawler.settings.get("MONGO_URI"),
             db=crawler.settings.get("MONGO_DB"),
@@ -34,4 +35,15 @@ class MongoDBPipeline:
         self.client.close()
 
     def process_item(self, item: Any, spider: Spider):
+        if isinstance(item, Category):
+            document: Dict[str, Any] = item.json()
+            id: str = document.pop("id")
+            document["_id"] = id
+            self.db['categories'].insert_one(document)
+        elif isinstance(item, AppSummary):
+            #document: Dict[str, Any] = item.json()
+            #id: str = document.pop("id")
+            #document["_id"] = id
+            #self.db.categories.insert_one(document)
+            pass
         return item
