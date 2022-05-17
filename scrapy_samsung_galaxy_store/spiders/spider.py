@@ -1,15 +1,15 @@
 from typing import Iterable, List
-import scrapy
-from scrapy.http import Request, Response
-
-from samsung_galaxy_store import Category, AppSummary, App
+from scrapy import Spider
+from scrapy.http import Request
+from samsung_galaxy_store import Category, AppSummary, App, Review
 
 from scrapy_samsung_galaxy_store.middlewares import JsonResponse
 
 
-class SpiderSpider(scrapy.Spider):
+class SpiderSpider(Spider):
     name = "galaxy-store"
     CATEGORY_APPS_PAGE_SIZE = 500
+    APP_REVIEWS_PAGE_SIZE = 15
 
     def start_requests(self) -> Request:
         yield Request(url="api://categories", callback=self.parse_categories)
@@ -27,6 +27,7 @@ class SpiderSpider(scrapy.Spider):
                 },
                 callback=self.parse_category_apps,
             )
+            break
 
     def parse_category_apps(self, response: JsonResponse) -> Iterable[Request | App]:
         request: Request = response.request
@@ -43,6 +44,7 @@ class SpiderSpider(scrapy.Spider):
                 callback=self.parse_app_details,
             )
             break
+
         if len(apps) == self.CATEGORY_APPS_PAGE_SIZE:
             start: int = request.meta.get("start")
             yield Request(
@@ -58,3 +60,29 @@ class SpiderSpider(scrapy.Spider):
     def parse_app_details(self, response: JsonResponse) -> Iterable[App]:
         app: App = response.json()
         yield app
+
+        if app.review_count:
+            yield Request(
+                url=f"api://app_reviews/{app.id}",
+                meta={
+                    "app": app,
+                    "start": 1
+                },
+                callback=self.parse_app_reviews,
+            )
+
+    def parse_app_reviews(self, response: JsonResponse):
+        request: Request = response.request
+        app: App = request.meta.get("app")
+        reviews: List[Review] = response.json()
+
+        if len(reviews) == self.APP_REVIEWS_PAGE_SIZE:
+            start: int = request.meta.get("start")
+            yield Request(
+                url=f"api://app_reviews/{app.id}",
+                meta={
+                    "app": app,
+                    "start": start + self.APP_REVIEWS_PAGE_SIZE
+                },
+                callback=self.parse_app_reviews,
+            )
