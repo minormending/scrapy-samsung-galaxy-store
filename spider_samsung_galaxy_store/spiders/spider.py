@@ -64,10 +64,7 @@ class SpiderSpider(Spider):
         if app.review_count:
             yield Request(
                 url=f"api://app_reviews/{app.id}",
-                meta={
-                    "app": app,
-                    "start": 1
-                },
+                meta={"app": app, "start": 1},
                 callback=self.parse_app_reviews,
             )
 
@@ -75,14 +72,14 @@ class SpiderSpider(Spider):
         request: Request = response.request
         app: App = request.meta.get("app")
         reviews: List[Review] = response.json()
+        for review in reviews:
+            review.app = app
+            yield review
 
         if len(reviews) == self.APP_REVIEWS_PAGE_SIZE:
             start: int = request.meta.get("start") + self.APP_REVIEWS_PAGE_SIZE
             yield Request(
                 url=f"api://app_reviews/{app.id}?start={start}",
-                meta={
-                    "app": app,
-                    "start": start
-                },
+                meta={"app": app, "start": start},
                 callback=self.parse_app_reviews,
-            )
+            )            )

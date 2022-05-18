@@ -41,7 +41,7 @@ class SamsungGalaxyStoreDownloaderMiddleware:
             start: int = request.meta.get("start")
             reviews: List[Review] = list(self.api.get_app_reviews_page(app.id, start))
             return JsonResponse(url=request.url, jobject=reviews, request=request)
-        
+
         return None
 
     def process_response(self, request: Request, response: Response, spider: Spider):
