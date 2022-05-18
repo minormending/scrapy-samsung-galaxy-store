@@ -27,7 +27,6 @@ class SpiderSpider(Spider):
                 },
                 callback=self.parse_category_apps,
             )
-            break
 
     def parse_category_apps(self, response: JsonResponse) -> Iterable[Request | App]:
         request: Request = response.request
@@ -43,7 +42,6 @@ class SpiderSpider(Spider):
                 },
                 callback=self.parse_app_details,
             )
-            break
 
         if len(apps) == self.CATEGORY_APPS_PAGE_SIZE:
             start: int = request.meta.get("start") + self.CATEGORY_APPS_PAGE_SIZE
@@ -82,4 +80,4 @@ class SpiderSpider(Spider):
                 url=f"api://app_reviews/{app.id}?start={start}",
                 meta={"app": app, "start": start},
                 callback=self.parse_app_reviews,
-            )            )
+            )
