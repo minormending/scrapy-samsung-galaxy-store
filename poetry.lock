@@ -492,7 +492,7 @@ six = "*"
 
 [[package]]
 name = "samsung-galaxy-store"
-version = "0.1.4"
+version = "0.1.6"
 description = "Samsung Galaxy Store analysis tools"
 category = "main"
 optional = false
@@ -1144,8 +1144,8 @@ requests-file = [
     {file = "requests_file-1.5.1-py2.py3-none-any.whl", hash = "sha256:dfe5dae75c12481f68ba353183c53a65e6044c923e64c24b2209f6c7570ca953"},
 ]
 samsung-galaxy-store = [
-    {file = "samsung-galaxy-store-0.1.4.tar.gz", hash = "sha256:4bf9b4835e75e9aa715cc12ec21691fb4d706ddd06537361b68a0b640fc57431"},
-    {file = "samsung_galaxy_store-0.1.4-py3-none-any.whl", hash = "sha256:e11934d7cec916bff7653051d26679f2981bddd70bc97d815386af5278d90a46"},
+    {file = "samsung-galaxy-store-0.1.6.tar.gz", hash = "sha256:9b6a13d0f528311496ec7d065211e15fa78126c724049bc2325091365f756a40"},
+    {file = "samsung_galaxy_store-0.1.6-py3-none-any.whl", hash = "sha256:b92e43f073ee6924f3c2c3bfc845face671c672c316053b619042979d2d94827"},
 ]
 scrapy = [
     {file = "Scrapy-2.6.1-py2.py3-none-any.whl", hash = "sha256:e977f57d4e828f25d2702e8c2212e8abcd7d6ce45be560f1830a39432a494c09"},
