@@ -10,6 +10,7 @@ from scrapy.http import Request, Response
 from samsung_galaxy_store import SamsungGalaxyStore, Category, AppSummary, App, Review
 
 from .json_response import JsonResponse
+from .router import Router
 
 
 class SamsungGalaxyStoreDownloaderMiddleware:
@@ -20,10 +21,10 @@ class SamsungGalaxyStoreDownloaderMiddleware:
         return s
 
     def process_request(self, request: Request, spider: Spider):
-        if request.url == "api://categories":
+        if Router.is_categories_uri(request.url):
             categories: List[Category] = self.api.get_categories()
             return JsonResponse(url=request.url, jobject=categories, request=request)
-        elif request.url.startswith("api://category_apps/"):
+        elif Router.is_category_apps_uri(request.url):
             category: Category = request.meta.get("category")
             start: int = request.meta.get("start")
             end: int = request.meta.get("end")
@@ -31,7 +32,7 @@ class SamsungGalaxyStoreDownloaderMiddleware:
                 self.api.get_category_apps(category, start, end)
             )
             return JsonResponse(url=request.url, jobject=apps, request=request)
-        elif request.url.startswith("api://app/"):
+        elif Router.is_app_details_uri(request.url):
             summary: AppSummary = request.meta.get("app")
             app: App = self.api.get_app_details(summary.guid)
             return JsonResponse(url=request.url, jobject=app, request=request)

@@ -4,6 +4,7 @@ from scrapy.http import Request
 from samsung_galaxy_store import Category, AppSummary, App, Review
 
 from spider_samsung_galaxy_store.middlewares import JsonResponse
+from spider_samsung_galaxy_store.router import Router
 
 
 class SpiderSpider(Spider):
@@ -12,14 +13,14 @@ class SpiderSpider(Spider):
     APP_REVIEWS_PAGE_SIZE = 15
 
     def start_requests(self) -> Request:
-        yield Request(url="api://categories", callback=self.parse_categories)
+        yield Request(url=Router.build_categories_uri(), callback=self.parse_categories)
 
     def parse_categories(self, response: JsonResponse) -> Iterable[Request | Category]:
         categories: List[Category] = response.json()
         for category in categories:
             yield category
             yield Request(
-                url=f"api://category_apps/{category.id}",
+                url=Router.build_category_apps_uri(category, 1),
                 meta={
                     "category": category,
                     "start": 1,
@@ -35,7 +36,7 @@ class SpiderSpider(Spider):
         for app in apps:
             yield app
             yield Request(
-                url=f"api://app/{app.guid}",
+                url=Router.build_app_details_uri(app),
                 meta={
                     "category": category,
                     "app": app,
@@ -46,7 +47,7 @@ class SpiderSpider(Spider):
         if len(apps) == self.CATEGORY_APPS_PAGE_SIZE:
             start: int = request.meta.get("start") + self.CATEGORY_APPS_PAGE_SIZE
             yield Request(
-                url=f"api://category_apps/{category.id}?start={start}",
+                url=Router.build_category_apps_uri(category, start),
                 meta={
                     "category": category,
                     "start": start,
