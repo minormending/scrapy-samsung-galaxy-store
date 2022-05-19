@@ -13,12 +13,12 @@ from .json_response import JsonResponse
 from .router import Router
 
 
-class SamsungGalaxyStoreDownloaderMiddleware:
+class ApiDownloaderMiddleware:
     @classmethod
     def from_crawler(cls, crawler):
-        s = cls()
-        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
-        return s
+        middleware: ApiDownloaderMiddleware = cls()
+        crawler.signals.connect(middleware.spider_opened, signal=signals.spider_opened)
+        return middleware
 
     def process_request(self, request: Request, spider: Spider):
         if Router.is_categories_uri(request.url):
@@ -36,7 +36,7 @@ class SamsungGalaxyStoreDownloaderMiddleware:
             summary: AppSummary = request.meta.get("app")
             app: App = self.api.get_app_details(summary.guid)
             return JsonResponse(url=request.url, jobject=app, request=request)
-        elif request.url.startswith("api://app_reviews/"):
+        elif Router.is_app_reviews_uri(request.url):
             app: App = request.meta.get("app")
             start: int = request.meta.get("start")
             reviews: List[Review] = list(self.api.get_app_reviews_page(app.id, start))
@@ -45,22 +45,9 @@ class SamsungGalaxyStoreDownloaderMiddleware:
         return None
 
     def process_response(self, request: Request, response: Response, spider: Spider):
-        # Called with the response returned from the downloader.
-
-        # Must either;
-        # - return a Response object
-        # - return a Request object
-        # - or raise IgnoreRequest
         return response
 
     def process_exception(self, request: Request, exception: Exception, spider: Spider):
-        # Called when a download handler or a process_request()
-        # (from other downloader middleware) raises an exception.
-
-        # Must either:
-        # - return None: continue processing this exception
-        # - return a Response object: stops process_exception() chain
-        # - return a Request object: stops process_exception() chain
         pass
 
     def spider_opened(self, spider: Spider):

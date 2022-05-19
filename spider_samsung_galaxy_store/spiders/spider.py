@@ -20,7 +20,7 @@ class SpiderSpider(Spider):
         for category in categories:
             yield category
             yield Request(
-                url=Router.build_category_apps_uri(category, 1),
+                url=Router.build_category_apps_uri(category, start=1),
                 meta={
                     "category": category,
                     "start": 1,
@@ -62,7 +62,7 @@ class SpiderSpider(Spider):
 
         if app.review_count:
             yield Request(
-                url=f"api://app_reviews/{app.id}",
+                url=Router.build_app_reviews_uri(app, start=1),
                 meta={"app": app, "start": 1},
                 callback=self.parse_app_reviews,
             )
@@ -78,7 +78,7 @@ class SpiderSpider(Spider):
         if len(reviews) == self.APP_REVIEWS_PAGE_SIZE:
             start: int = request.meta.get("start") + self.APP_REVIEWS_PAGE_SIZE
             yield Request(
-                url=f"api://app_reviews/{app.id}?start={start}",
+                url=Router.build_app_reviews_uri(app, start),
                 meta={"app": app, "start": start},
                 callback=self.parse_app_reviews,
             )
