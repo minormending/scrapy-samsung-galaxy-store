@@ -20,7 +20,6 @@ class SamsungGalaxyStoreDownloaderMiddleware:
         return s
 
     def process_request(self, request: Request, spider: Spider):
-        print("=" * 10, request.url)
         if request.url == "api://categories":
             categories: List[Category] = self.api.get_categories()
             return JsonResponse(url=request.url, jobject=categories, request=request)
