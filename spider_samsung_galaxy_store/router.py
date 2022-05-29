@@ -3,12 +3,12 @@ from samsung_galaxy_store import Category, AppSummary, App
 
 class Router:
     @classmethod
-    def build_categories_uri(cls) -> str:
-        return "api://categories"
+    def build_categories_uri(cls, games: bool) -> str:
+        return f"api://categories?games={games}"
 
     @classmethod
     def is_categories_uri(cls, url: str) -> bool:
-        return url.lower() == "api://categories"
+        return url.lower().startswith("api://categories?")
 
     @classmethod
     def build_category_apps_uri(cls, category: Category, start: int) -> str:

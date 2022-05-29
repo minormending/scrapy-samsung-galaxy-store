@@ -10,9 +10,11 @@ from spider_samsung_galaxy_store.router import Router
 
 class SpiderMode(Enum):
     ALL = "all"
-    CATEGORIES = "categories"
-    APPS = "apps"
-    APP_DETAILS = "app_details"
+    ONLY_CATEGORIES = "categories"
+    APP_CATEGORIES = "app_categories"
+    GAME_CATEGORIES = "game_categories"
+    ONLY_APPS = "apps"
+    ONLY_APP_DETAILS = "app_details"
 
 
 class SpiderSpider(Spider):
@@ -25,13 +27,24 @@ class SpiderSpider(Spider):
         self.mode: SpiderMode = SpiderMode(mode)
 
     def start_requests(self) -> Request:
-        yield Request(url=Router.build_categories_uri(), callback=self.parse_categories)
+        if self.mode is not SpiderMode.APP_CATEGORIES:
+            yield Request(
+                url=Router.build_categories_uri(games=True),
+                callback=self.parse_categories,
+                meta={"games": True},
+            )
+        if self.mode is not SpiderMode.GAME_CATEGORIES:
+            yield Request(
+                url=Router.build_categories_uri(games=False),
+                callback=self.parse_categories,
+                meta={"games": False},
+            )
 
     def parse_categories(self, response: JsonResponse) -> Iterable[Request | Category]:
         categories: List[Category] = response.json()
         for category in categories:
             yield category
-            if self.mode is not SpiderMode.CATEGORIES:
+            if self.mode is not SpiderMode.ONLY_CATEGORIES:
                 yield Request(
                     url=Router.build_category_apps_uri(category, start=1),
                     meta={
@@ -48,7 +61,7 @@ class SpiderSpider(Spider):
         apps: List[AppSummary] = response.json()
         for app in apps:
             yield app
-            if self.mode is not SpiderMode.APPS:
+            if self.mode is not SpiderMode.ONLY_APPS:
                 yield Request(
                     url=Router.build_app_details_uri(app),
                     meta={
@@ -59,7 +72,7 @@ class SpiderSpider(Spider):
                 )
 
         if (
-            self.mode is not SpiderMode.APPS
+            self.mode is not SpiderMode.ONLY_APPS
             and len(apps) == self.CATEGORY_APPS_PAGE_SIZE
         ):
             start: int = request.meta.get("start") + self.CATEGORY_APPS_PAGE_SIZE
@@ -77,7 +90,7 @@ class SpiderSpider(Spider):
         app: App = response.json()
         yield app
 
-        if self.mode is not SpiderMode.APP_DETAILS and app.review_count:
+        if self.mode is not SpiderMode.ONLY_APP_DETAILS and app.review_count:
             yield Request(
                 url=Router.build_app_reviews_uri(app, start=1),
                 meta={"app": app, "start": 1},
